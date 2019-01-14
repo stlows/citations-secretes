@@ -107,7 +107,7 @@ body {
 }
 
 .btn--primary {
-    background-color: rgb(1, 152, 93);
+    background-color: rgb(137, 247, 204);
     color: #222;
 }
 .btn--secondary {
@@ -142,6 +142,5 @@ body {
 .quote {
     text-align:center;
     font-size:2em;
-    width: 100%;
     margin-bottom: 2.5rem;
 }

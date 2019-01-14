@@ -56,6 +56,9 @@ function getQuote(){
             $('#quote-title').text(post.title);
             $('#quote-content').html(post.content);
 
+            var rows = splitQuote(post.content);
+            console.log(rows);
+
             // If the Source is available, use it. Otherwise hide it.
             if (typeof post.custom_meta !== 'undefined' && typeof post.custom_meta.Source !== 'undefined') {
                 $('#quote-source').html('Source:' + post.custom_meta.Source);
@@ -66,4 +69,23 @@ function getQuote(){
       },
       cache: false
     });
+}
+
+function splitQuote(quote) {
+    // removes html tags
+    quote = quote.replace(/<\/?[^>]+(>|$)|/g, "")
+
+    // removes - ' _ #
+    quote = quote.replace(/#|_|-|'/g,' ');
+
+    // remove \n and \r
+    quote = quote.replace(/\r?\n|\r/g, '');
+
+    var nbRow = Math.floor(Math.random() * (6 - 3 + 1)) + 3;
+    var rowLength = Math.floor(quote.length / nbRow)+1;
+    var rows = [];
+    for (i = 0; i < nbRow; i++){
+        rows.push(quote.substring(i*rowLength, (i+1)*rowLength));
+    }
+    return rows
 }
