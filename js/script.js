@@ -47,7 +47,7 @@ function getQuote(){
       url: 'http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1',
       success: function(data) {
         var post = data.shift(); // The data is an array of posts. Grab the first one.
-        if (post.content.length > 60) {
+        if (post.content.length > 70 || post.content.length < 30) {
             getQuote();
         } else {
             $('#spinner').addClass('d-none');
@@ -55,16 +55,16 @@ function getQuote(){
 
             $('#quote-title').text(post.title);
             $('#quote-content').html(post.content);
-
-            var rows = splitQuote(post.content);
-            console.log(rows);
-
             // If the Source is available, use it. Otherwise hide it.
             if (typeof post.custom_meta !== 'undefined' && typeof post.custom_meta.Source !== 'undefined') {
                 $('#quote-source').html('Source:' + post.custom_meta.Source);
             } else {
                 $('#quote-source').text('');
             }
+
+            var rows = splitQuote(post.content);
+            placeQuote(rows);
+
         }
       },
       cache: false
@@ -73,13 +73,16 @@ function getQuote(){
 
 function splitQuote(quote) {
     // removes html tags
-    quote = quote.replace(/<\/?[^>]+(>|$)|/g, "")
+    quote = quote.replace(/<\/?[^>]+(>|$)|\./g, "")
 
-    // removes - ' _ #
-    quote = quote.replace(/#|_|-|'/g,' ');
+    // replaces - ' _ # — ,  by spaces
+    quote = quote.replace(/#|_|-|'|—|,/g,' ');
 
-    // remove \n and \r
+    // removes \n and \r
     quote = quote.replace(/\r?\n|\r/g, '');
+
+    // replaces double spaces by simple space
+    quote = quote.replace(/ +(?= )/g,'');
 
     var nbRow = Math.floor(Math.random() * (6 - 3 + 1)) + 3;
     var rowLength = Math.floor(quote.length / nbRow)+1;
