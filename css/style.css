@@ -161,3 +161,21 @@ body {
 #indice--selected {
     background-color:rgb(255, 168, 0);
 }
+
+.space {
+    background-color: #000 !important;
+}
+
+.reponse:hover {
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+.board ::-moz-selection{
+    background-color:Transparent;
+    color:#000;
+}
+
+.board ::selection {
+    background-color:Transparent;
+    color:#000;
+}

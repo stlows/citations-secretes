@@ -1,6 +1,8 @@
 $(function(){
     var counter = 0;
 
+    var clickedIndice = null;
+
     var citations = [{
         'auteur':'Vincent Beaulieu',
         'citation':'Ce site permet de faire des citations secretes'
@@ -61,7 +63,7 @@ $(function(){
                 var spanReponse = document.createElement('span');
                 spanReponse.classList.add('reponse');
                 if(!isAlpha(colonnes[i][j])){
-                    $(spanReponse).css('backgroundColor', '#000');
+                    spanReponse.classList.add('space');
                 }
                 divReponse.appendChild(spanReponse);
 
@@ -78,41 +80,49 @@ $(function(){
 
     function initEvents()
     {
-        $('.indice').click(function(){
+
+        $('.indice').mousedown(function(e){
+            e.preventDefault();
             $('.indice').attr("id","");
             if (!$(this).hasClass('striked')) {
                 $(this).attr("id","indice--selected");
+                clickedIndice = $(this);
             }
         });
 
-        $('.reponse').click(function(){
-            var reponseParentID = $(this).parent().attr("id");
-            var reponseNb = reponseParentID.substr(reponseParentID.length - 1);
+        $('.reponse').on("mouseup click",function(e){
+            e.preventDefault();
+            if (!$(this).hasClass('space')){
+                var reponseParentID = $(this).parent().attr("id");
+                var reponseNb = reponseParentID.substr(reponseParentID.length - 1);
 
-            if ($.trim($(this).html())!='') { // if the element is not empty
-                var colIndices = $("#col--indices-"+reponseNb).children();
-                for (i = 0; i < colIndices.length ; i++){
-                    if (colIndices[i].innerHTML == $(this).html()){
+                if ($.trim($(this).html())!='') { // if the element is not empty
+                    // un-strike the indice
+                    var colIndices = $("#col--indices-"+reponseNb).children();
+                    for (i = 0; i < colIndices.length ; i++){
+                        if (colIndices[i].innerHTML == $(this).html()){
                             if (colIndices[i].classList.contains('striked')) {
-                            colIndices[i].classList.remove('striked');
-                            break;
+                                colIndices[i].classList.remove('striked');
+                                break;
+                            }
                         }
+                    }
+                }
+
+                $(this).empty();
+
+                if (clickedIndice) {
+                    if (sameColumn(clickedIndice,$(this))){
+                        $(this).html(clickedIndice.html());
+                        clickedIndice.addClass('striked');
                     }
                 }
             }
 
-            $(this).empty();
-
-            if ($('#indice--selected').html()) {
-                var indice = $('#indice--selected');
-                if (sameColumn(indice,$(this))){
-                    $(this).html(indice.html());
-                    indice.addClass('striked');
-                }
-            }
-
             $('.indice').attr("id","");
+            clickedIndice = null;
         });
+
     }
 
     function getColonnes(citation){
@@ -202,12 +212,6 @@ $(function(){
         // replaces double spaces by simple space
         quote = quote.replace(/ +(?= )/g,'');
 
-        var nbRow = Math.floor(Math.random() * (6 - 3 + 1)) + 3;
-        var rowLength = Math.floor(quote.length / nbRow)+1;
-        var rows = [];
-        for (i = 0; i < nbRow; i++){
-            rows.push(quote.substring(i*rowLength, (i+1)*rowLength));
-        }
         return quote;
     }
 
