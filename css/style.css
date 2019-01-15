@@ -142,7 +142,7 @@ body {
 }
 
 .d-none {
-    display: none;
+    display: none !important;
 }
 
 .not-active {
@@ -150,6 +150,7 @@ body {
   cursor: default;
   text-decoration: none;
   color: black;
+  background-color: rgb(166, 166, 166);
 }
 
 .quote {
@@ -178,4 +179,17 @@ body {
 .board ::selection {
     background-color:Transparent;
     color:#000;
+}
+
+.no-cursor {
+    cursor:none;
+}
+
+#custom-cursor {
+    position:absolute;
+    pointer-events:none;
+    display: block;
+    padding: .5rem;
+    line-height: 2rem;
+    font-size: 2rem;
 }
