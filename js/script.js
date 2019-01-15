@@ -1,5 +1,7 @@
 $(function(){
 
+    var counter = 0;
+
     var citations = [{
         'auteur':'Vincent Beaulieu',
         'citation':'Ce site permet de faire des citations secretes'
@@ -9,50 +11,58 @@ $(function(){
         'citation':'Vous savez je ne crois pas qu il y ait de bonnes ou de mauvaises situations'
     }]
 
-    var nbColonnes = 10;
-    var citation = citations[1].citation
-    var colonnes = getColonnes(citation);
-    var sortedColonnes = getSortedColonnes(citation);
+    var nbColonnes = 12;
 
-    var maxIndices = getMaxIndices(colonnes);
+    initBoard();
 
-    for(let i = 0; i < nbColonnes; i++){
+    function initBoard() {
+        var citation = citations[1].citation
+        var colonnes = getColonnes(citation);
+        var sortedColonnes = getSortedColonnes(citation);
+    
+        var maxIndices = getMaxIndices(colonnes);
 
-        var divIndice = document.createElement('div');
-        divIndice.classList.add('col');
-        divIndice.classList.add('col--indices');
-        divIndice.id = 'col--indices-' + i;
+        $('#indices').empty();
+        $('#reponses').empty();
 
-        var divReponse = document.createElement('div');
-        divReponse.classList.add('col');
-        divReponse.classList.add('col--reponses');
-        divReponse.id = 'col--reponses-' + i;
-
-        for(let j = 0; j < sortedColonnes[i].length; j++){
-            if(isAlpha(sortedColonnes[i][j])){
-                var spanIndice = document.createElement('span');
-                spanIndice.classList.add('indice');
-                spanIndice.innerHTML = sortedColonnes[i][j].toUpperCase();
-                divIndice.appendChild(spanIndice);
+        for(let i = 0; i < nbColonnes; i++){
+    
+            var divIndice = document.createElement('div');
+            divIndice.classList.add('col');
+            divIndice.classList.add('col--indices');
+            divIndice.id = 'col--indices-' + i;
+    
+            var divReponse = document.createElement('div');
+            divReponse.classList.add('col');
+            divReponse.classList.add('col--reponses');
+            divReponse.id = 'col--reponses-' + i;
+    
+            for(let j = 0; j < sortedColonnes[i].length; j++){
+                if(isAlpha(sortedColonnes[i][j])){
+                    var spanIndice = document.createElement('span');
+                    spanIndice.classList.add('indice');
+                    spanIndice.innerHTML = sortedColonnes[i][j].toUpperCase();
+                    divIndice.appendChild(spanIndice);
+                }
             }
-        }
-
-        for(let j = 0; j < colonnes[i].length; j++){
-            var spanReponse = document.createElement('span');
-            spanReponse.classList.add('reponse');
-            if(!isAlpha(colonnes[i][j])){
-                $(spanReponse).css('backgroundColor', '#000');
+    
+            for(let j = 0; j < colonnes[i].length; j++){
+                var spanReponse = document.createElement('span');
+                spanReponse.classList.add('reponse');
+                if(!isAlpha(colonnes[i][j])){
+                    $(spanReponse).css('backgroundColor', '#000');
+                }
+                divReponse.appendChild(spanReponse);
+    
             }
-            divReponse.appendChild(spanReponse);
 
+            document.getElementById('indices').appendChild(divIndice);
+            document.getElementById('reponses').appendChild(divReponse);
+    
+            var indicesCourant = sortedColonnes[i].filter(letter => isAlpha(letter)).length;
+            $('#col--indices-' + i).css('paddingTop', (maxIndices - indicesCourant) * 3 + 'rem');
         }
-
-        document.getElementById('indices').appendChild(divIndice);
-        document.getElementById('reponses').appendChild(divReponse);
-
-        var indicesCourant = sortedColonnes[i].filter(letter => isAlpha(letter)).length;
-        $('#col--indices-' + i).css('paddingTop', (maxIndices - indicesCourant) * 3 + 'rem');
-       
+           
     }
     function getColonnes(citation){
         var colonnes = [];
@@ -79,6 +89,11 @@ $(function(){
     })
     $('#reponse-1').css('background-color', '#000');
 
+    $('#btn-change-width').click(function(e){
+        e.preventDefault();
+        nbColonnes = prompt('Quelle largeur?');
+        initBoard();
+    });
     function isAlpha(ch){
         return typeof ch === "string" && ch.length === 1
                && (ch >= "a" && ch <= "z" || ch >= "A" && ch <= "Z");
