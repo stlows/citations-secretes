@@ -48,10 +48,10 @@ body {
     margin: 0;
     float:left;
     border: 1px #222 solid;
-    border-right: 0;
 }
-.col:last-child {
-    border-right: 1px #222 solid;
+
+.col:not(:first-child){
+    border-left: 0; 
 }
 
 .col span {
@@ -61,19 +61,23 @@ body {
     font-size: 2rem;
 }
 
+.col span:last-child{
+}
+
 .col span:hover {
     cursor: pointer;
 }
 
 .col--reponses {
     border-top: 0;
+    border-bottom: 0;
 }
 
 .col--reponses span {
+    height: 3.5rem;
     border-bottom: 1px #222 solid;
 }
 .col--reponses span:last-child {
-    border-bottom: 0;
 }
 
 .btn {
@@ -119,6 +123,9 @@ body {
     color: #222;
 }
 
+.striked {
+    text-decoration: line-through;
+}
 
 .invalid-feedback {
     text-align:center;

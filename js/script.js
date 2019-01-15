@@ -1,41 +1,99 @@
 $(function(){
 
-    var citations = {
+    var citations = [{
         'auteur':'Vincent Beaulieu',
         'citation':'Ce site permet de faire des citations secretes'
-    }
+    },
+    {
+        'auteur':'Vincent Beaulieu',
+        'citation':'Vous savez je ne crois pas qu il y ait de bonnes ou de mauvaises situations'
+    }]
 
     var nbColonnes = 10;
+    var citation = citations[1].citation
+    var colonnes = getColonnes(citation);
+    var sortedColonnes = getSortedColonnes(citation);
 
-    function initColonnes(citation){
+    var maxIndices = getMaxIndices(colonnes);
+
+    for(let i = 0; i < nbColonnes; i++){
+
+        var divIndice = document.createElement('div');
+        divIndice.classList.add('col');
+        divIndice.classList.add('col--indices');
+        divIndice.id = 'col--indices-' + i;
+
+        var divReponse = document.createElement('div');
+        divReponse.classList.add('col');
+        divReponse.classList.add('col--reponses');
+        divReponse.id = 'col--reponses-' + i;
+
+        for(let j = 0; j < sortedColonnes[i].length; j++){
+            if(isAlpha(sortedColonnes[i][j])){
+                var spanIndice = document.createElement('span');
+                spanIndice.classList.add('indice');
+                spanIndice.innerHTML = sortedColonnes[i][j].toUpperCase();
+                divIndice.appendChild(spanIndice);
+            }
+        }
+
+        for(let j = 0; j < colonnes[i].length; j++){
+            var spanReponse = document.createElement('span');
+            spanReponse.classList.add('reponse');
+            if(!isAlpha(colonnes[i][j])){
+                $(spanReponse).css('backgroundColor', '#000');
+            }
+            divReponse.appendChild(spanReponse);
+
+        }
+
+        document.getElementById('indices').appendChild(divIndice);
+        document.getElementById('reponses').appendChild(divReponse);
+
+        var indicesCourant = sortedColonnes[i].filter(letter => isAlpha(letter)).length;
+        $('#col--indices-' + i).css('paddingTop', (maxIndices - indicesCourant) * 3 + 'rem');
+       
+    }
+    function getColonnes(citation){
         var colonnes = [];
 
         for(var i = 0; i < nbColonnes; i++){
             var colonne = citation.split('').filter((letter, index) => index % nbColonnes == i);
             colonnes.push(colonne);
         }
-
         return colonnes;
     }
 
-    var colonnes = initColonnes(citations.citation);
-    console.log(colonnes);
+    function getSortedColonnes(citation){
+        var sortedColonnes = [];
 
-    var maxIndices = 0;
-    $('.col--indices').each(function(){
-        var indicesCourant = $(this).children('span').length;
-        if(indicesCourant > maxIndices) {
-            maxIndices = indicesCourant;
+        for(var i = 0; i < nbColonnes; i++){
+            var colonne = citation.split('').filter((letter, index) => index % nbColonnes == i);
+            sortedColonnes.push(colonne.sort());
         }
-    });
+        return sortedColonnes;
+    }
 
-    $('.col--indices').each(function(){
-        var indicesCourant = $(this).children('span').length;
-        $(this).css('paddingTop', (maxIndices - indicesCourant) * 3 + 'rem')
-    });
-
+    $('.indice').click(function(){
+        $(this).toggleClass('striked');
+    })
     $('#reponse-1').css('background-color', '#000');
 
+    function isAlpha(ch){
+        return typeof ch === "string" && ch.length === 1
+               && (ch >= "a" && ch <= "z" || ch >= "A" && ch <= "Z");
+      }
+
+      function getMaxIndices(colonnes) {
+        var maxIndices = 0;
+        for(let i = 0;i < colonnes.length; i++){
+            var indicesCourant = colonnes[i].filter(letter => isAlpha(letter)).length;
+            if(indicesCourant > maxIndices) {
+                maxIndices = indicesCourant;
+            }
+        }
+        return maxIndices;
+      } 
 
 });
 
@@ -67,7 +125,8 @@ function getQuote(){
 
         }
       },
-      cache: false
+      cache: false,
+      type: 'get'
     });
 }
 
