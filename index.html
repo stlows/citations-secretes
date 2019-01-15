@@ -18,6 +18,7 @@
 
         <div class="controls">
             <a id="btn-new-quote" href="#" type="button" class="btn btn--primary btn--hover">Nouvelle citation</a>
+            <a id="btn-new-quote-local" href="#" type="button" class="btn btn--primary btn--hover">Nouvelle citation locale</a>
             <a href="#" class="btn btn--secondary btn--hover">Valider</a>
             <a href="#" class="btn btn--info btn--hover">Indice</a>
         </div>
@@ -35,19 +36,19 @@
 
         <div class="container">
             <div class="author">
-                <b>Auteur: </b>Vincent Beaulieu
+                <b>Auteur: </b><span id='auteur'></span> (<span id='idCitation'></span>)
             </div>
-        <div class="board">
+            <div class="board">
 
-            <div class="indices" id='indices'></div>
+                <div class="indices" id='indices'></div>
 
-            <div class="reponses" id='reponses'></div>
+                <div class="reponses" id='reponses'></div>
 
+            </div>
+            <div class="controls">
+                <a id="btn-change-width" href="#" type="button" class="btn btn--grey btn--hover btn-small">Changer largeur</a>
+            </div>
         </div>
-        <div class="controls">
-            <a id="btn-change-width" href="#" type="button" class="btn btn--grey btn--hover btn-small">Changer largeur</a>
-        </div>
-    </div>
 
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="js/script.js"></script>

@@ -8,7 +8,7 @@ $(function(){
         'citation':'Ce site permet de faire des citations secretes'
     },
     {
-        'auteur':'Vincent Beaulieu',
+        'auteur':'Le Scribe',
         'citation':'Vous savez je ne crois pas qu il y ait de bonnes ou de mauvaises situations'
     }]
 
@@ -18,9 +18,20 @@ $(function(){
 
     $('#reponse-1').css('background-color', '#000');
 
+    function incrementCounter(){
+        counter = (counter + 1) % citations.length;
+    }
+
     $('#btn-change-width').click(function(e){
         e.preventDefault();
         nbColonnes = prompt('Quelle largeur?');
+        incrementCounter();
+        initBoard();
+    });
+
+    $('#btn-new-quote-local').click(function(e){
+        e.preventDefault();
+        incrementCounter();
         initBoard();
     });
 
@@ -29,9 +40,17 @@ $(function(){
         getQuote();
     });
 
-    function initBoard(citation) {
-        var colonnes = getColonnes(citation);
-        var sortedColonnes = getSortedColonnes(citation);
+    function initHeader(){
+        document.getElementById('auteur').innerHTML = citations[counter].auteur;
+        document.getElementById('idCitation').innerHTML = counter;
+    }
+
+    function initBoard() {
+
+        initHeader()
+
+        var colonnes = getColonnes(citations[counter].citation);
+        var sortedColonnes = getSortedColonnes(citations[counter].citation);
 
         var maxIndices = getMaxIndices(colonnes);
 
@@ -127,7 +146,6 @@ $(function(){
 
     function getColonnes(citation){
         var colonnes = [];
-
         for(var i = 0; i < nbColonnes; i++){
             var colonne = citation.split('').filter((letter, index) => index % nbColonnes == i);
             colonnes.push(colonne);
