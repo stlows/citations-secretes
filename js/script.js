@@ -99,17 +99,27 @@ $(function(){
 
     function initEvents()
     {
+        var cursor = document.getElementById('custom-cursor');
+        $("body").mousemove(function(e) {
+            cursor.style.left = e.pageX-12+"px";
+            cursor.style.top = e.pageY-20+"px";
+        });
 
         $('.indice').mousedown(function(e){
             e.preventDefault();
+
+            $("#custom-cursor").html($(this).html());
+            $("#custom-cursor").removeClass("d-none");
+
             $('.indice').attr("id","");
             if (!$(this).hasClass('striked')) {
                 $(this).attr("id","indice--selected");
                 clickedIndice = $(this);
             }
+            s
         });
 
-        $('.reponse').on("mouseup click",function(e){
+        $('.reponse').mouseup(function(e){
             e.preventDefault();
             if (!$(this).hasClass('space')){
                 var reponseParentID = $(this).parent().attr("id");
@@ -140,6 +150,10 @@ $(function(){
 
             $('.indice').attr("id","");
             clickedIndice = null;
+        });
+
+        $("body").mouseup(function(e){
+            $("#custom-cursor").addClass("d-none");
         });
 
     }
@@ -200,14 +214,14 @@ $(function(){
                     var quote = formatQuote(post.content);
                     initBoard(quote);
 
-                    $('#quote-title').text(post.title);
-                    $('#quote-content').html(quote);
-                    // If the Source is available, use it. Otherwise hide it.
-                    if (typeof post.custom_meta !== 'undefined' && typeof post.custom_meta.Source !== 'undefined') {
-                        $('#quote-source').html('Source:' + post.custom_meta.Source);
-                    } else {
-                        $('#quote-source').text('');
-                    }
+                    // $('#quote-title').text(post.title);
+                    // $('#quote-content').html(quote);
+                    // // If the Source is available, use it. Otherwise hide it.
+                    // if (typeof post.custom_meta !== 'undefined' && typeof post.custom_meta.Source !== 'undefined') {
+                    //     $('#quote-source').html('Source:' + post.custom_meta.Source);
+                    // } else {
+                    //     $('#quote-source').text('');
+                    // }
 
 
                 }
