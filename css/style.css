@@ -52,7 +52,7 @@ body {
 }
 
 .col:not(:first-child){
-    border-left: 0; 
+    border-left: 0;
 }
 
 .col span {
@@ -156,4 +156,8 @@ body {
     text-align:center;
     font-size:2em;
     margin-bottom: 2.5rem;
+}
+
+#indice--selected {
+    background-color:rgb(255, 168, 0);
 }
