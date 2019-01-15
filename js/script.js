@@ -14,7 +14,7 @@ $(function(){
 
     var nbColonnes = 12;
 
-    initBoard(citations[1].citation);
+    initBoard();
 
     $('#reponse-1').css('background-color', '#000');
 
@@ -212,7 +212,13 @@ $(function(){
                     $('#spinner').addClass('d-none');
                     $('#btn-new-quote').removeClass('not-active');
                     var quote = formatQuote(post.content);
-                    initBoard(quote);
+
+                    counter = citations.push({
+                        'auteur' : post.title,
+                        'citation' : quote
+                    }) - 1;
+
+                    initBoard();
 
                     // $('#quote-title').text(post.title);
                     // $('#quote-content').html(quote);
