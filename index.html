@@ -20,10 +20,12 @@
         </div>
 
         <div class="controls">
-            <a id="btn-new-quote" href="#" type="button" class="btn btn--primary btn--hover">Nouvelle citation</a>
-            <a id="btn-new-quote-local" href="#" type="button" class="btn btn--primary btn--hover">Nouvelle citation locale</a>
+            <!-- Bouton en commentaire vu que l'API nécessite de rouler le site sur un serveur
+            <a id="btn-new-quote" href="#" type="button" class="btn btn--primary btn--hover">Nouvelle citation (API)</a>
+            -->
+            <a id="btn-new-quote-local" href="#" type="button" class="btn btn--primary btn--hover">Nouvelle citation</a>
+            <a href="#" class="btn btn--info btn--hover" id="btn-get-indice">Indice</a>
             <a href="#" class="btn btn--secondary btn--hover">Valider</a>
-            <a href="#" class="btn btn--info btn--hover">Indice</a>
         </div>
 
         <div id="feedback" class="invalid-feedback"></div>
@@ -35,7 +37,10 @@
 
         <div class="container">
             <div class="author">
-                <b>Auteur: </b><span id='auteur'></span> (<span id='idCitation'></span>)
+                <b>Auteur: </b><span id='auteur'></span>
+            </div>
+            <div class="timer-container">
+                <b>Temps: </b><span id='timer'>0:00</span>
             </div>
             <div class="board">
 
@@ -49,7 +54,10 @@
             </div>
         </div>
 
+        <span id='idCitation'></span>
+
         <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/citations.js"></script>
         <script src="js/script.js"></script>
     </body>
 </html>

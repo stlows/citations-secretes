@@ -35,10 +35,18 @@ body {
     text-align: center;
 }
 
-.author {
+.author,
+.timer-container {
     font-size: 2rem;
     margin-bottom: 2rem;
 }
+#idCitation {
+    position: fixed;
+    font-size: 2rem;
+    bottom: 1vh;
+    right:1vw;
+}
+
 .board {
     display: inline-block;
     clear: both;

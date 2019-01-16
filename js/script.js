@@ -1,16 +1,10 @@
 $(function(){
-    var counter = 0;
+
+    var counter = generateRandomNumber(0, citations.length);
+    console.log(citations[counter].citation)
+    var timerId = null;
 
     var clickedIndice = null;
-
-    var citations = [{
-        'auteur':'Vincent Beaulieu',
-        'citation':'Ce site permet de faire des citations secretes'
-    },
-    {
-        'auteur':'Le Scribe',
-        'citation':'Vous savez je ne crois pas qu il y ait de bonnes ou de mauvaises situations'
-    }]
 
     var nbColonnes = 12;
 
@@ -29,9 +23,14 @@ $(function(){
         initBoard();
     });
 
+    function generateRandomNumber(min , max) {
+        let random_number = Math.random() * (max-min) + min;
+        return Math.floor(random_number);
+    }
+    
     $('#btn-new-quote-local').click(function(e){
         e.preventDefault();
-        incrementCounter();
+        counter = generateRandomNumber(0, citations.length);
         initBoard();
     });
 
@@ -40,13 +39,19 @@ $(function(){
         getQuote();
     });
 
+    $('#btn-get-indice').click(function(e){
+        e.preventDefault();
+        spanIndice
+    })
+
     function initHeader(){
         document.getElementById('auteur').innerHTML = citations[counter].auteur;
-        document.getElementById('idCitation').innerHTML = counter;
+        document.getElementById('idCitation').innerHTML = "id: " + counter;
     }
 
     function initBoard() {
 
+        $('#timer').html("0:00");
         initHeader()
 
         var colonnes = getColonnes(citations[counter].citation);
@@ -93,8 +98,26 @@ $(function(){
 
             var indicesCourant = sortedColonnes[i].filter(letter => isAlpha(letter)).length;
             $('#col--indices-' + i).css('paddingTop', (maxIndices - indicesCourant) * 3 + 'rem');
+
+
         }
+        clearInterval(timerId);
+        timerId = timer();
         initEvents();
+    }
+
+
+    function timer(){
+        var timeStamp = 1;
+        var id = setInterval(function(){
+            $('#timer').html(getTime(timeStamp));
+            timeStamp++;
+        }, 1000)
+        return id;
+    }
+    function getTime(sec){
+        if(sec < 60) return "0:" + sec.toString().padStart(2, '0');
+        else if(sec < 3600) return Math.floor(sec/60).toString() + ':' + (sec % 60).toString().padStart(2, '0');
     }
 
     function initEvents()
@@ -116,7 +139,7 @@ $(function(){
                 $(this).attr("id","indice--selected");
                 clickedIndice = $(this);
             }
-            s
+            
         });
 
         $('.reponse').mouseup(function(e){
