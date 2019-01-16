@@ -19,7 +19,6 @@ $(function(){
     $('#btn-change-width').click(function(e){
         e.preventDefault();
         nbColonnes = prompt('Quelle largeur?');
-        incrementCounter();
         initBoard();
     });
 
@@ -27,7 +26,7 @@ $(function(){
         let random_number = Math.random() * (max-min) + min;
         return Math.floor(random_number);
     }
-    
+
     $('#btn-new-quote-local').click(function(e){
         e.preventDefault();
         counter = generateRandomNumber(0, citations.length);
@@ -41,7 +40,7 @@ $(function(){
 
     $('#btn-get-indice').click(function(e){
         e.preventDefault();
-        spanIndice
+        generateNewIndice();
     })
 
     function initHeader(){
@@ -112,7 +111,7 @@ $(function(){
         var id = setInterval(function(){
             $('#timer').html(getTime(timeStamp));
             timeStamp++;
-        }, 1000)
+        }, 1000);
         return id;
     }
     function getTime(sec){
@@ -120,8 +119,7 @@ $(function(){
         else if(sec < 3600) return Math.floor(sec/60).toString() + ':' + (sec % 60).toString().padStart(2, '0');
     }
 
-    function initEvents()
-    {
+    function initEvents(){
         var cursor = document.getElementById('custom-cursor');
         $("body").mousemove(function(e) {
             cursor.style.left = e.pageX-12+"px";
@@ -139,7 +137,7 @@ $(function(){
                 $(this).attr("id","indice--selected");
                 clickedIndice = $(this);
             }
-            
+
         });
 
         $('.reponse').mouseup(function(e){
@@ -216,6 +214,33 @@ $(function(){
         return maxIndices;
     }
 
+    function generateNewIndice(){
+        var rndIndex, rndValue;
+        var colIndex, rowIndex;
+        var indices, indice, reponse;
+        if (gridIsCompleted()) {
+            return;
+        }
+        do {
+            do {
+                rndIndex = Math.floor(Math.random() * citations[counter].citation.length);
+                rndValue = citations[counter].citation[rndIndex].toUpperCase();
+                colIndex = rndIndex % nbColonnes;
+                rowIndex = Math.floor(rndIndex / nbColonnes);
+                reponse = $('#col--reponses-'+colIndex).children()[rowIndex];
+            } while(rndValue == " " || reponse.classList.contains('space') || reponse.innerHTML.length);
+            indices = $('#col--indices-'+colIndex).children();
+            for (let i = 0; i < indices.length; i++){
+                if (indices[i].innerHTML == rndValue
+                    && !indices[i].classList.contains('striked')) {
+                    indice = indices[i];
+                }
+            }
+        } while (!indice || indice.classList.contains('striked'));
+        reponse.innerHTML = indice.innerHTML;
+        indice.classList.add('striked');
+    }
+
     function getQuote(){
         $('#spinner').removeClass('d-none');
         $('#btn-new-quote').addClass('not-active');
@@ -285,5 +310,20 @@ $(function(){
             return true;
         }
         return false;
+    }
+
+    function gridIsCompleted() {
+        var col;
+        for(let i=0; i < nbColonnes; i++){
+            colChildren = $('#col--reponses-'+i).children();
+            for(let j=0; j < colChildren.length; j++){
+                if (!colChildren[j].classList.contains('space')){
+                    if (colChildren[j].innerHTML.length === 0){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 });
