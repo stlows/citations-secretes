@@ -43,6 +43,15 @@ $(function(){
         generateNewIndice();
     })
 
+    $('#btn-validate').click(function(e){
+        e.preventDefault();
+        solutionIsValid();
+    });
+
+    $('#success-message').click(function(){
+        $(this).fadeOut();
+    });
+
     function initHeader(){
         document.getElementById('auteur').innerHTML = citations[counter].auteur;
         document.getElementById('idCitation').innerHTML = "id: " + counter;
@@ -114,11 +123,16 @@ $(function(){
         }, 1000);
         return id;
     }
+
     function getTime(sec){
         if(sec < 60) return "0:" + sec.toString().padStart(2, '0');
         else if(sec < 3600) return Math.floor(sec/60).toString() + ':' + (sec % 60).toString().padStart(2, '0');
     }
 
+    /**
+     * events that need to be defined only after the board rendering
+     * @return null
+     */
     function initEvents(){
         var cursor = document.getElementById('custom-cursor');
         $("body").mousemove(function(e) {
@@ -129,11 +143,11 @@ $(function(){
         $('.indice').mousedown(function(e){
             e.preventDefault();
 
-            $("#custom-cursor").html($(this).html());
-            $("#custom-cursor").removeClass("d-none");
-
-            $('.indice').attr("id","");
             if (!$(this).hasClass('striked')) {
+                $("#custom-cursor").html($(this).html());
+                $("#custom-cursor").removeClass("d-none");
+
+                $('.indice').attr("id","");
                 $(this).attr("id","indice--selected");
                 clickedIndice = $(this);
             }
@@ -144,12 +158,15 @@ $(function(){
             e.preventDefault();
             if (!$(this).hasClass('space')){
                 var reponseParentID = $(this).parent().attr("id");
-                var reponseNb = reponseParentID.substr(reponseParentID.length - 1);
+                var reponseSplitted = reponseParentID.split('-');
+                var reponseNb = reponseSplitted[reponseSplitted.length - 1];
 
                 if ($.trim($(this).html())!='') { // if the element is not empty
                     // un-strike the indice
                     var colIndices = $("#col--indices-"+reponseNb).children();
+                    console.log(reponseNb);
                     for (i = 0; i < colIndices.length ; i++){
+                        console.log(colIndices[i].innerHTML);
                         if (colIndices[i].innerHTML == $(this).html()){
                             if (colIndices[i].classList.contains('striked')) {
                                 colIndices[i].classList.remove('striked');
@@ -175,6 +192,15 @@ $(function(){
 
         $("body").mouseup(function(e){
             $("#custom-cursor").addClass("d-none");
+        });
+
+        $('.reponse').on('DOMSubtreeModified',function(e){
+            if (solutionIsValid()){
+                clearInterval(timerId);
+                $('#success-message').animate({
+                    height: 'toggle'
+                }, 1000, function() {});
+            }
         });
 
     }
@@ -319,6 +345,22 @@ $(function(){
             for(let j=0; j < colChildren.length; j++){
                 if (!colChildren[j].classList.contains('space')){
                     if (colChildren[j].innerHTML.length === 0){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function solutionIsValid(){
+        var col;
+        for(let i=0; i < nbColonnes; i++){
+            colReponses = $('#col--reponses-'+i).children();
+            for(let j=0; j < colReponses.length; j++){
+                if (!colReponses[j].classList.contains('space')){
+                    if (colReponses[j].innerHTML.length === 0
+                    || colReponses[j].innerHTML != citations[counter].citation[j*nbColonnes+i].toUpperCase()){
                         return false;
                     }
                 }
