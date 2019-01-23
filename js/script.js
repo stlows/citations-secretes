@@ -32,6 +32,27 @@ $(function(){
         initBoard();
     });
 
+    $('#btn-custom-quote').click(function(e){
+        e.preventDefault();
+        $('#custom-quote').animate({
+            height: 'toggle'
+        }, 200, function() {});
+    });
+
+    $('#btn-enter-custom-quote').click(function(e){
+        e.preventDefault();
+        var quote = formatQuote($('#custom-quote-input').val());
+        counter = citations.push({
+            'auteur' : 'Vous!',
+            'citation' : quote
+        }) - 1;
+        initBoard();
+        $('#custom-quote').animate({
+            height: 'toggle'
+        }, 200, function() {});
+        $('#custom-quote-input').val('');
+    });
+
     $('#btn-new-quote').click(function(e){
         e.preventDefault();
         getQuote();
@@ -333,7 +354,7 @@ $(function(){
         // replaces double spaces by simple space
         quote = quote.replace(/ +(?= )/g,'');
 
-        return quote;
+        return latinise(quote);
     }
 
     function sameColumn(indice, reponse) {
@@ -410,4 +431,20 @@ $(function(){
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-});
+
+    // to remove accents.  Taken from
+    // https://stackoverflow.com/a/8490728/7507867
+    var latinise = (function () {
+      var in_chrs   = 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
+          out_chrs  = 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY',
+          chars_rgx = new RegExp('[' + in_chrs + ']', 'g'),
+          transl    = {}, i,
+          lookup    = function (m) { return transl[m] || m; };
+
+      for (i=0; i<in_chrs.length; i++) {
+        transl[ in_chrs[i] ] = out_chrs[i];
+      }
+
+      return function (s) { return s.replace(chars_rgx, lookup); }
+    })();
+    });
