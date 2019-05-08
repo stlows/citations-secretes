@@ -1,3 +1,10 @@
+var app = new Vue({
+    el: '#app',
+    data: {
+      timer: '0:00'
+    }
+  })
+
 $(function(){
 
     var counter = generateRandomNumber(0, citations.length);
@@ -79,7 +86,7 @@ $(function(){
 
     function initBoard() {
 
-        $('#timer').html("0:00");
+        app.timer = "0:00";
         initHeader()
 
         var colonnes = getColonnes(citations[counter].citation);
@@ -138,7 +145,7 @@ $(function(){
     function timer(){
         var timeStamp = 1;
         var id = setInterval(function(){
-            $('#timer').html(getTime(timeStamp));
+            app.timer = getTime(timeStamp);
             timeStamp++;
         }, 1000);
         return id;
